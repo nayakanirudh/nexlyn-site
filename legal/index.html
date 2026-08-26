@@ -31,4 +31,31 @@ document.documentElement.classList.add("js");
     if (r.top < innerHeight && r.bottom > 0) els[j].classList.add("is-in");
     else io.observe(els[j]);
   }
-})();</script></body></html>
+})();
+
+(function () {
+  var btn = document.querySelector('[aria-controls="mobile-nav"]');
+  var nav = document.getElementById("mobile-nav");
+  if (!btn || !nav) return;
+  var bars = btn.querySelectorAll("span > span");
+  function paint(open) {
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+    btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    nav.hidden = !open;
+    if (bars.length === 2) {
+      bars[0].style.transform = open ? "translateY(6px) rotate(45deg)" : "";
+      bars[1].style.transform = open ? "translateY(-6px) rotate(-45deg)" : "";
+    }
+  }
+  btn.addEventListener("click", function () {
+    paint(nav.hidden);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !nav.hidden) { paint(false); btn.focus(); }
+  });
+  // Leaving the mobile breakpoint while open would strand an open panel.
+  window.addEventListener("resize", function () {
+    if (window.innerWidth >= 768 && !nav.hidden) paint(false);
+  });
+})();
+</script></body></html>
